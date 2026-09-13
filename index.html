@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadence — Minimalist Clock, Timer & Stopwatch</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell" id="app">
+    <!-- Top Navigation Bar -->
+    <header class="top-bar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">Cadence</span>
+      </div>
+
+      <!-- Segmented Navigation for the 3 Parts -->
+      <nav class="segment-nav" role="tablist" aria-label="Mode selector">
+        <button class="nav-btn active" role="tab" aria-selected="true" data-tab="clock" id="tab-clock">
+          Clock
+        </button>
+        <button class="nav-btn" role="tab" aria-selected="false" data-tab="timer" id="tab-timer">
+          Timer
+        </button>
+        <button class="nav-btn" role="tab" aria-selected="false" data-tab="stopwatch" id="tab-stopwatch">
+          Stopwatch
+        </button>
+      </nav>
+
+      <!-- Utility Controls -->
+      <div class="utility-actions">
+        <button class="icon-btn" id="btn-sound-toggle" title="Toggle sound chime" aria-label="Toggle sound chime">
+          <svg class="icon icon-sound-on" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+          <svg class="icon icon-sound-off hidden" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </button>
+        <button class="icon-btn" id="btn-zen-mode" title="Toggle zen / fullscreen view" aria-label="Toggle zen mode">
+          <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <polyline points="9 21 3 21 3 15"></polyline>
+            <line x1="21" y1="3" x2="14" y2="10"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Panels -->
+    <main class="main-stage">
+      
+      <!-- 1. CLOCK PANEL -->
+      <section class="panel active" id="panel-clock" role="tabpanel" aria-labelledby="tab-clock">
+        <div class="clock-display-wrap">
+          <div class="clock-time-container">
+            <div class="clock-main-digits" id="clock-time">00:00:00</div>
+            <span class="clock-period" id="clock-period"></span>
+          </div>
+          <div class="clock-date" id="clock-date">Loading date...</div>
+          <div class="clock-sub-meta">
+            <button class="chip-toggle" id="btn-format-toggle" title="Toggle 12h/24h format">
+              <span id="format-label">24H</span>
+            </button>
+            <span class="chip-info" id="clock-timezone">Local Time</span>
+          </div>
+        </div>
+
+        <!-- World Clock Cards (Understated minimal grid) -->
+        <div class="world-clocks" id="world-clocks">
+          <div class="world-card" data-tz="America/Los_Angeles">
+            <div class="world-meta">
+              <span class="world-city">San Francisco</span>
+              <span class="world-offset" id="tz-offset-sfo">--</span>
+            </div>
+            <div class="world-time" id="tz-time-sfo">--:--</div>
+          </div>
+          <div class="world-card" data-tz="America/New_York">
+            <div class="world-meta">
+              <span class="world-city">New York</span>
+              <span class="world-offset" id="tz-offset-nyc">--</span>
+            </div>
+            <div class="world-time" id="tz-time-nyc">--:--</div>
+          </div>
+          <div class="world-card" data-tz="Europe/London">
+            <div class="world-meta">
+              <span class="world-city">London</span>
+              <span class="world-offset" id="tz-offset-lon">--</span>
+            </div>
+            <div class="world-time" id="tz-time-lon">--:--</div>
+          </div>
+          <div class="world-card" data-tz="Asia/Tokyo">
+            <div class="world-meta">
+              <span class="world-city">Tokyo</span>
+              <span class="world-offset" id="tz-offset-tyo">--</span>
+            </div>
+            <div class="world-time" id="tz-time-tyo">--:--</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. TIMER PANEL -->
+      <section class="panel" id="panel-timer" role="tabpanel" aria-labelledby="tab-timer">
+        <div class="timer-display-wrap">
+          <!-- Progress Ring & Countdown -->
+          <div class="timer-dial-container" id="timer-dial-container">
+            <svg class="progress-ring" viewBox="0 0 340 340" width="340" height="340">
+              <circle class="ring-track" cx="170" cy="170" r="150" />
+              <circle class="ring-progress" id="timer-ring" cx="170" cy="170" r="150" />
+            </svg>
+            <div class="timer-center-content">
+              <!-- Running / Paused Display -->
+              <div class="timer-digits-readout" id="timer-digits" title="Click to adjust duration">05:00</div>
+              <span class="timer-status-hint" id="timer-status-hint">Ready</span>
+
+              <!-- Direct Input Mode (editable numbers) -->
+              <div class="timer-input-group hidden" id="timer-inputs">
+                <div class="time-spin-input">
+                  <input type="number" id="input-hours" min="0" max="99" value="0" placeholder="00" aria-label="Hours">
+                  <span class="spin-unit">h</span>
+                </div>
+                <span class="time-sep">:</span>
+                <div class="time-spin-input">
+                  <input type="number" id="input-minutes" min="0" max="59" value="5" placeholder="05" aria-label="Minutes">
+                  <span class="spin-unit">m</span>
+                </div>
+                <span class="time-sep">:</span>
+                <div class="time-spin-input">
+                  <input type="number" id="input-seconds" min="0" max="59" value="0" placeholder="00" aria-label="Seconds">
+                  <span class="spin-unit">s</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Presets -->
+          <div class="timer-presets" id="timer-presets">
+            <button class="preset-pill" data-minutes="1">1m</button>
+            <button class="preset-pill active" data-minutes="5">5m</button>
+            <button class="preset-pill" data-minutes="10">10m</button>
+            <button class="preset-pill" data-minutes="15">15m</button>
+            <button class="preset-pill" data-minutes="25">25m Focus</button>
+            <button class="preset-pill" data-minutes="45">45m</button>
+          </div>
+
+          <!-- Timer Actions -->
+          <div class="action-bar">
+            <button class="btn btn-secondary" id="btn-timer-reset" disabled>Reset</button>
+            <button class="btn btn-primary" id="btn-timer-toggle">Start</button>
+            <button class="btn btn-secondary" id="btn-timer-add" title="Add 1 minute">+1m</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. STOPWATCH PANEL -->
+      <section class="panel" id="panel-stopwatch" role="tabpanel" aria-labelledby="tab-stopwatch">
+        <div class="stopwatch-display-wrap">
+          <div class="stopwatch-time-container">
+            <span class="sw-time-main" id="sw-main">00:00</span>
+            <span class="sw-time-sub" id="sw-ms">.00</span>
+          </div>
+
+          <div class="action-bar">
+            <button class="btn btn-secondary" id="btn-sw-reset" disabled>Reset</button>
+            <button class="btn btn-primary" id="btn-sw-toggle">Start</button>
+            <button class="btn btn-secondary" id="btn-sw-lap" disabled>Lap</button>
+          </div>
+
+          <!-- Laps Table -->
+          <div class="laps-container" id="laps-container">
+            <div class="laps-header">
+              <span>Lap</span>
+              <span>Split</span>
+              <span>Overall</span>
+            </div>
+            <div class="laps-list" id="laps-list">
+              <div class="laps-empty">No laps recorded</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Subtle Footer with Hotkey Hints -->
+    <footer class="app-footer">
+      <div class="keyboard-hints">
+        <span class="hint-key"><kbd>Space</kbd> Start / Pause</span>
+        <span class="hint-key"><kbd>R</kbd> Reset</span>
+        <span class="hint-key"><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> Switch tabs</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

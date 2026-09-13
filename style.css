@@ -1,0 +1,777 @@
+/* Cadence — Minimalist Timekeeper (Anthropic Aesthetic) */
+:root {
+  --bg-main: #FAF9F5;
+  --bg-surface: #F4EFEA;
+  --bg-elevated: #FFFFFF;
+  --border-subtle: #E8E3DA;
+  --border-strong: #D9D3C7;
+  
+  --text-primary: #191919;
+  --text-secondary: #6B665E;
+  --text-muted: #969085;
+  
+  --accent: #CC785C;
+  --accent-hover: #B8674D;
+  --accent-active: #A4573F;
+  --accent-subtle: #F6ECE6;
+  --accent-glow: rgba(204, 120, 92, 0.15);
+
+  --btn-secondary-bg: #EFEBE4;
+  --btn-secondary-hover: #E4DFD6;
+  --btn-secondary-border: #E0DAD0;
+  
+  --success-bg: #EBF4ED;
+  --success-text: #2D6A4F;
+  --danger-bg: #FBF0EC;
+  --danger-text: #B4533C;
+
+  --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* App Shell */
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1.5rem 1rem;
+  max-width: 960px;
+  margin: 0 auto;
+  transition: padding 0.3s ease;
+}
+
+/* Top Navigation Bar */
+.top-bar {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.brand-mark {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  display: inline-block;
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.brand-name {
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+/* Segmented Mode Selector */
+.segment-nav {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--btn-secondary-bg);
+  padding: 3px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+}
+
+.nav-btn {
+  background: transparent;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 0.45rem 1.15rem;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.nav-btn:hover {
+  color: var(--text-primary);
+}
+
+.nav-btn.active {
+  background-color: var(--text-primary);
+  color: var(--bg-main);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+}
+
+/* Utility Actions */
+.utility-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  padding: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.icon-btn:hover {
+  background-color: var(--btn-secondary-bg);
+  border-color: var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Main Stage */
+.main-stage {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+/* Panels */
+.panel {
+  display: none;
+  width: 100%;
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.panel.active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Common Action Bar */
+.action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.btn {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.65rem 1.6rem;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+  user-select: none;
+  min-width: 96px;
+  text-align: center;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  color: #FFFFFF;
+  box-shadow: 0 1px 3px rgba(204, 120, 92, 0.3);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+  box-shadow: 0 2px 6px rgba(204, 120, 92, 0.4);
+}
+
+.btn-secondary {
+  background-color: var(--btn-secondary-bg);
+  color: var(--text-primary);
+  border-color: var(--btn-secondary-border);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--btn-secondary-hover);
+}
+
+/* ----------------- 1. CLOCK SECTION ----------------- */
+.clock-display-wrap {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2.75rem;
+}
+
+.clock-time-container {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.clock-main-digits {
+  font-family: var(--font-sans);
+  font-size: clamp(4rem, 11vw, 7.5rem);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  color: var(--text-primary);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.clock-period {
+  font-family: var(--font-serif);
+  font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+  font-style: italic;
+  color: var(--accent);
+  margin-left: 0.35rem;
+  font-weight: 400;
+}
+
+.clock-date {
+  font-family: var(--font-serif);
+  font-size: clamp(1.25rem, 2.5vw, 1.8rem);
+  color: var(--text-secondary);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin-top: 0.65rem;
+}
+
+.clock-sub-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.chip-toggle {
+  background-color: var(--btn-secondary-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 0.25rem 0.65rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  letter-spacing: 0.04em;
+}
+
+.chip-toggle:hover {
+  background-color: var(--btn-secondary-hover);
+  color: var(--text-primary);
+}
+
+.chip-info {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* World Clocks */
+.world-clocks {
+  width: 100%;
+  max-width: 680px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.85rem;
+}
+
+.world-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: border-color 0.15s ease;
+}
+
+.world-card:hover {
+  border-color: var(--border-strong);
+}
+
+.world-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.world-city {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.world-offset {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.world-time {
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ----------------- 2. TIMER SECTION ----------------- */
+.timer-display-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.timer-dial-container {
+  position: relative;
+  width: 340px;
+  height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ring-track {
+  fill: none;
+  stroke: var(--border-subtle);
+  stroke-width: 5;
+}
+
+.ring-progress {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 942.48; /* 2 * PI * 150 */
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ring-completed {
+  animation: pulseFinish 1s ease infinite alternate;
+}
+
+@keyframes pulseFinish {
+  from {
+    stroke: var(--accent);
+  }
+  to {
+    stroke: #E0947A;
+  }
+}
+
+.timer-center-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+}
+
+.timer-digits-readout {
+  font-family: var(--font-sans);
+  font-size: 4.4rem;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  color: var(--text-primary);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+  transition: color 0.15s ease;
+}
+
+.timer-digits-readout:hover {
+  color: var(--accent);
+}
+
+.timer-status-hint {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 0.5rem;
+}
+
+/* Direct Input Mode */
+.timer-input-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.time-spin-input {
+  display: flex;
+  align-items: baseline;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 0.25rem 0.5rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.time-spin-input:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.time-spin-input input {
+  width: 48px;
+  background: transparent;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  text-align: center;
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+.time-spin-input input::-webkit-outer-spin-button,
+.time-spin-input input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.spin-unit {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-left: 2px;
+}
+
+.time-sep {
+  font-size: 1.8rem;
+  color: var(--text-muted);
+  font-weight: 300;
+}
+
+/* Presets */
+.timer-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 2rem;
+  max-width: 420px;
+}
+
+.preset-pill {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 0.35rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.preset-pill:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.preset-pill.active {
+  background-color: var(--accent-subtle);
+  border-color: var(--accent);
+  color: var(--accent-active);
+  font-weight: 600;
+}
+
+/* ----------------- 3. STOPWATCH SECTION ----------------- */
+.stopwatch-display-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 460px;
+}
+
+.stopwatch-time-container {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  margin-bottom: 0.5rem;
+}
+
+.sw-time-main {
+  font-family: var(--font-sans);
+  font-size: clamp(4.5rem, 11vw, 6.8rem);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.sw-time-sub {
+  font-family: var(--font-mono);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  color: var(--text-muted);
+  font-weight: 400;
+  margin-left: 0.2rem;
+}
+
+/* Laps */
+.laps-container {
+  width: 100%;
+  margin-top: 2rem;
+  border-top: 1px solid var(--border-subtle);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.laps-header {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr;
+  padding: 0.65rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  background-color: var(--bg-main);
+  z-index: 1;
+}
+
+.laps-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.laps-empty {
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.lap-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr;
+  padding: 0.55rem 0.5rem;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  align-items: center;
+  animation: fadeIn 0.2s ease;
+}
+
+.lap-row.fastest {
+  color: var(--success-text);
+  font-weight: 600;
+}
+
+.lap-row.fastest .lap-num::after {
+  content: 'FAST';
+  font-size: 0.62rem;
+  background-color: var(--success-bg);
+  padding: 1px 5px;
+  border-radius: var(--radius-sm);
+  margin-left: 6px;
+  letter-spacing: 0.02em;
+}
+
+.lap-row.slowest {
+  color: var(--danger-text);
+  font-weight: 600;
+}
+
+.lap-row.slowest .lap-num::after {
+  content: 'SLOW';
+  font-size: 0.62rem;
+  background-color: var(--danger-bg);
+  padding: 1px 5px;
+  border-radius: var(--radius-sm);
+  margin-left: 6px;
+  letter-spacing: 0.02em;
+}
+
+/* App Footer */
+.app-footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.keyboard-hints {
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.hint-key {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+kbd {
+  font-family: var(--font-sans);
+  background-color: var(--btn-secondary-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* Zen Mode / Fullscreen */
+body.zen-mode .top-bar {
+  opacity: 0.15;
+  transition: opacity 0.2s ease;
+}
+
+body.zen-mode .top-bar:hover {
+  opacity: 1;
+}
+
+body.zen-mode .app-footer,
+body.zen-mode .world-clocks,
+body.zen-mode .timer-presets,
+body.zen-mode .laps-container {
+  display: none !important;
+}
+
+body.zen-mode .clock-main-digits {
+  font-size: clamp(5.5rem, 16vw, 11rem);
+}
+
+body.zen-mode .sw-time-main {
+  font-size: clamp(5.5rem, 16vw, 10rem);
+}
+
+body.zen-mode .timer-dial-container {
+  transform: scale(1.15);
+}
+
+/* Responsive adjustments */
+@media (max-width: 680px) {
+  .app-shell {
+    padding: 1rem 1rem 0.75rem;
+  }
+
+  .top-bar {
+    grid-template-columns: auto 1fr auto;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .brand-name {
+    display: none;
+  }
+
+  .world-clocks {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .timer-dial-container {
+    width: 290px;
+    height: 290px;
+  }
+
+  .progress-ring {
+    width: 290px;
+    height: 290px;
+  }
+
+  .timer-digits-readout {
+    font-size: 3.5rem;
+  }
+
+  .keyboard-hints {
+    display: none;
+  }
+}
